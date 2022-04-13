@@ -1,4 +1,9 @@
-package src.main.java.org.generation.BlogPessoal.controller;
+package org.generation.BlogPessoal.controller;
+
+import java.util.List;
+
+import org.generation.BlogPessoal.model.Tema;
+import org.generation.BlogPessoal.repository.TemaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,47 +18,42 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import generation.org.BlogPessoal.model.Tema;
-import generation.org.BlogPessoal.repository.TemaRepository;
-
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/tema")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class TemaController {
 	
 	@Autowired
 	private TemaRepository repository;
-	
+
 	@GetMapping
 	public ResponseEntity<List<Tema>> getAll(){
 		return ResponseEntity.ok(repository.findAll());
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Tema> getById(@PathVariable long id){
-		return repository.findById(id).map(resp -> ResponseEntity.ok(resp))
-				.orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<Tema> getByID(@PathVariable Long id){
+		return  repository.findById(id).map(resp -> ResponseEntity.ok(resp))
+					.orElse(ResponseEntity.notFound().build());
 	}
 	
 	@GetMapping("/nome/{nome}")
-	public ResponseEntity<List<Tema>> getByName(@PathVariable String nome){
+	public ResponseEntity<List<Tema>> getByID(@PathVariable String nome){
 		return ResponseEntity.ok(repository.findAllByDescricaoContainingIgnoreCase(nome));
 	}
 	
 	@PostMapping
-	public ResponseEntity<Tema> post (@RequestBody Tema tema){
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(repository.save(tema));
+	public ResponseEntity<Tema> post(@RequestBody Tema tema){
+		return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(tema));
 	}
-
+	
 	@PutMapping
-	public ResponseEntity<Tema> put (@RequestBody Tema tema){
-		return ResponseEntity.ok(repository.save(tema));				
+	public ResponseEntity<Tema> put(@RequestBody Tema tema){
+		return ResponseEntity.ok(repository.save(tema));
 	}
 	
 	@DeleteMapping("/{id}")
-	public void delete(@PathVariable long id) {
+	public void delete(@PathVariable Long id) {
 		repository.deleteById(id);
 	}
-	
 }
